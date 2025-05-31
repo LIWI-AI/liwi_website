@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -585,9 +586,8 @@
 
     // Countdown Timer
     const setupCountdown = () => {
-      // Set the launch date (60 days from now)
-      const launchDate = new Date();
-      launchDate.setDate(launchDate.getDate() + 60);
+      // Set the launch date to July 20th, 2025
+      const launchDate = new Date('2025-07-20T00:00:00');
       
       const daysEl = document.getElementById('days');
       const hoursEl = document.getElementById('hours');
@@ -598,15 +598,23 @@
         const currentTime = new Date();
         const diff = launchDate - currentTime;
         
-        const days = Math.floor(diff / 1000 / 60 / 60 / 24);
-        const hours = Math.floor(diff / 1000 / 60 / 60) % 24;
-        const minutes = Math.floor(diff / 1000 / 60) % 60;
-        const seconds = Math.floor(diff / 1000) % 60;
-        
-        daysEl.innerText = days;
-        hoursEl.innerText = hours < 10 ? '0' + hours : hours;
-        minutesEl.innerText = minutes < 10 ? '0' + minutes : minutes;
-        secondsEl.innerText = seconds < 10 ? '0' + seconds : seconds;
+        if (diff > 0) {
+          const days = Math.floor(diff / 1000 / 60 / 60 / 24);
+          const hours = Math.floor(diff / 1000 / 60 / 60) % 24;
+          const minutes = Math.floor(diff / 1000 / 60) % 60;
+          const seconds = Math.floor(diff / 1000) % 60;
+          
+          daysEl.innerText = days;
+          hoursEl.innerText = hours < 10 ? '0' + hours : hours;
+          minutesEl.innerText = minutes < 10 ? '0' + minutes : minutes;
+          secondsEl.innerText = seconds < 10 ? '0' + seconds : seconds;
+        } else {
+          // Launch date has passed
+          daysEl.innerText = '00';
+          hoursEl.innerText = '00';
+          minutesEl.innerText = '00';
+          secondsEl.innerText = '00';
+        }
       };
       
       setInterval(updateCountdown, 1000);
