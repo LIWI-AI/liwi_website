@@ -4,737 +4,606 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Liwi - AI English Tutor</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.1/gsap.min.js"></script>
+  <title>Liwi - Your AI English Tutor</title>
+  <meta name="description" content="Master English with Liwi's AI-powered personalized tutoring. Experience intelligent conversations, real-time feedback, and accelerated learning.">
+  
+  <!-- SEO Meta Tags -->
+  <meta name="keywords" content="AI English tutor, learn English, conversation practice, language learning, pronunciation training">
+  <meta name="author" content="Liwi">
+  <meta property="og:title" content="Liwi - Your AI English Tutor">
+  <meta property="og:description" content="Master English with AI-powered personalized tutoring">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://myliwi.com">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Icons -->
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
   
-  <!-- Firebase Configuration -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getFirestore, collection, addDoc, serverTimestamp, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-    // ✅ Your actual Firebase configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyDf9AGj1FNJv8frPwkkx0i6LrMLmxdE28s",
-      authDomain: "liwi-web.firebaseapp.com",
-      projectId: "liwi-web",
-      storageBucket: "liwi-web.firebasestorage.app",
-      messagingSenderId: "577471398329",
-      appId: "1:577471398329:web:cc1c25f03015e8a4e3f668",
-      measurementId: "G-M4N9DCTVET"
-    };
-
-    let app, db;
-    
-    try {
-      // Initialize Firebase
-      app = initializeApp(firebaseConfig);
-      db = getFirestore(app);
-
-      // Make Firebase available globally
-      window.firebaseDB = db;
-      window.firebaseCollection = collection;
-      window.firebaseAddDoc = addDoc;
-      window.firebaseServerTimestamp = serverTimestamp;
-      window.firebaseQuery = query;
-      window.firebaseWhere = where;
-      window.firebaseGetDocs = getDocs;
-      window.firebaseInitialized = true;
-      
-      console.log('🔥 Firebase initialized successfully');
-      
-      // Test function for debugging
-      window.testFirebaseConnection = async function() {
-        try {
-          const testCollection = collection(db, 'test');
-          const testDoc = {
-            message: 'Firebase connection test',
-            timestamp: serverTimestamp(),
-            testDate: new Date().toISOString()
-          };
-          
-          const docRef = await addDoc(testCollection, testDoc);
-          console.log('✅ Firebase test successful! Document ID:', docRef.id);
-          alert('✅ Firebase test successful!');
-          return true;
-        } catch (error) {
-          console.error('❌ Firebase test failed:', error);
-          alert('❌ Firebase test failed: ' + error.message);
-          return false;
-        }
-      };
-      
-    } catch (error) {
-      console.error('❌ Firebase initialization failed:', error);
-      window.firebaseInitialized = false;
-      
-      // Fallback test function
-      window.testFirebaseConnection = function() {
-        alert('❌ Firebase not initialized. Please check your configuration.');
-        return false;
-      };
-    }
-  </script>
-  
+  <!-- CSS -->
   <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
-  <!-- Canvas Background -->
-  <div id="canvas-container">
-    <canvas id="letters-canvas"></canvas>
-  </div>
-
-  <!-- Navigation -->
-  <nav class="navbar" id="navbar">
-    <div class="nav-container">
-      <div class="logo">
-        <div class="logo-icon">L</div>
-        <span class="logo-text">Liwi</span>
-      </div>
-      <ul class="nav-menu" id="nav-menu">
-        <li><a href="#home" class="nav-link active" data-section="home">Home</a></li>
-        <li><a href="#about" class="nav-link" data-section="about">About</a></li>
-        <li><a href="#features" class="nav-link" data-section="features">Features</a></li>
-        <li><a href="#app-preview" class="nav-link" data-section="app-preview">App Preview</a></li>
-        <li><a href="#testimonials" class="nav-link" data-section="testimonials">Reviews</a></li>
-        <li><a href="#contact" class="nav-link" data-section="contact">Contact</a></li>
-        <li class="nav-dropdown">
-          <a href="#" class="nav-link">Legal ▼</a>
-          <div class="dropdown-content">
-            <a href="#privacy" onclick="showPrivacyPolicy()">Privacy Policy</a>
-            <a href="#terms" onclick="showTermsOfService()">Terms of Service</a>
-          </div>
-        </li>
-      </ul>
-      <div class="nav-buttons">
-        <a href="#notify" class="btn btn-primary">Get Notified</a>
-      </div>
-      <button class="mobile-menu-btn" id="mobile-menu-btn">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
-    </div>
-  </nav>
-
-  <!-- Mobile Menu Overlay -->
-  <div class="mobile-menu-overlay" id="mobile-menu-overlay">
-    <div class="mobile-menu-content">
-      <ul class="mobile-nav-menu">
-        <li><a href="#home" class="mobile-nav-link" data-section="home">Home</a></li>
-        <li><a href="#about" class="mobile-nav-link" data-section="about">About</a></li>
-        <li><a href="#features" class="mobile-nav-link" data-section="features">Features</a></li>
-        <li><a href="#app-preview" class="mobile-nav-link" data-section="app-preview">App Preview</a></li>
-        <li><a href="#testimonials" class="mobile-nav-link" data-section="testimonials">Reviews</a></li>
-        <li><a href="#contact" class="mobile-nav-link" data-section="contact">Contact</a></li>
-        <li><a href="#privacy" class="mobile-nav-link" onclick="showPrivacyPolicy()">Privacy Policy</a></li>
-        <li><a href="#terms" class="mobile-nav-link" onclick="showTermsOfService()">Terms of Service</a></li>
-      </ul>
-      <div class="mobile-nav-buttons">
-        <a href="#notify" class="btn btn-primary">Get Notified</a>
+  <!-- Header -->
+  <header class="header" id="header">
+    <div class="container">
+      <div class="header-container">
+        <div class="logo">
+          <img src="assets/images/liwi_logo.png" alt="Liwi Logo" class="logo-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+          <span class="logo-text" style="display: none;">liwi</span>
+        </div>
       </div>
     </div>
-  </div>
+  </header>
 
   <!-- Hero Section -->
-  <section id="home" class="hero">
-    <div class="hero-content fade-in">
-      <div class="hero-logo">L</div>
-      <h1 class="hero-title">Liwi</h1>
-      <p class="hero-subtitle">
-        Master English with AI-powered personalized tutoring. 
-        Experience intelligent conversations, real-time feedback, and accelerated learning with our revolutionary English learning app.
-      </p>
-      
-      <div class="countdown" id="countdown">
-        <div class="countdown-item">
-          <span class="countdown-number" id="days">18</span>
-          <span class="countdown-label">Days</span>
-        </div>
-        <div class="countdown-item">
-          <span class="countdown-number" id="hours">12</span>
-          <span class="countdown-label">Hours</span>
-        </div>
-        <div class="countdown-item">
-          <span class="countdown-number" id="minutes">30</span>
-          <span class="countdown-label">Minutes</span>
-        </div>
-        <div class="countdown-item">
-          <span class="countdown-number" id="seconds">45</span>
-          <span class="countdown-label">Seconds</span>
-        </div>
-      </div>
+  <section class="hero" id="hero">
+    <div class="container">
+      <div class="hero-container">
+        <div class="hero-content">
+          <h1 class="hero-title">
+            Unlock your full potential with your very own 
+            <span class="gradient-text">AI English tutor</span>
+          </h1>
+          
+          <p class="hero-subtitle">
+            Speak fluent English with Liwi, the most advanced AI English teacher. Engage 
+            in personalized conversations with your speaking partner, receive real-time feedback, 
+            and open doors to limitless opportunities.
+          </p>
 
-      <div class="launch-info">
-        <h3>🚀 Beta Launch - June 20, 2025</h3>
-        <p>Be among the first to experience the future of English learning</p>
-      </div>
+          <div class="hero-badges">
+            <div class="badge">
+              <i data-lucide="users"></i>
+              <span>Growing Community</span>
+            </div>
+            <div class="badge">
+              <i data-lucide="star"></i>
+              <span>AI-Powered Learning</span>
+            </div>
+            <div class="badge">
+              <i data-lucide="clock"></i>
+              <span>24/7 Available</span>
+            </div>
+          </div>
+        </div>
 
-      <div class="email-signup" id="notify">
-        <input type="email" class="email-input" placeholder="Enter your email for early access" id="email-input">
-        <button class="email-btn" id="notify-btn">Get Early Access</button>
-      </div>
-
-      <div class="social-links">
-        <a href="#" class="social-link" aria-label="Facebook">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-          </svg>
-        </a>
-        <a href="#" class="social-link" aria-label="Twitter">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
-          </svg>
-        </a>
-        <a href="#" class="social-link" aria-label="LinkedIn">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-          </svg>
-        </a>
-        <a href="#" class="social-link" aria-label="Instagram">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-          </svg>
-        </a>
+        <div class="hero-visual">
+          <div class="phone-mockup">
+            <div class="phone-frame">
+              <div class="phone-screen">
+                <img src="assets/images/splashscreenpage.JPG" alt="Liwi App Screenshot" class="app-screenshot" onerror="this.style.display='none';">
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- About Section -->
-  <section id="about" class="section section-bg">
-    <div class="fade-in">
-      <h2 class="section-title">
-        About <span class="gradient-text">Liwi</span>
-      </h2>
-      <p class="section-subtitle">
-        We're revolutionizing English learning through AI-powered personalization, 
-        making it accessible, engaging, and effective for learners worldwide.
-      </p>
+  <section class="about" id="about">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">
+          About <span class="gradient-text">Liwi</span>
+        </h2>
+        <p class="section-subtitle">
+          Liwi uses advanced AI to personalize English education, adapting to each learner's pace and style. 
+          Research shows AI tutors accelerate language learning by 3x through instant feedback and adaptive content.
+        </p>
+      </div>
 
-      <div class="grid-2" style="margin-bottom: 4rem;">
-        <div>
-          <h3 style="font-size: 2rem; margin-bottom: 1.5rem;">Our Mission</h3>
-          <p style="color: #d1d5db; margin-bottom: 1.5rem;">
-            At Liwi, we believe English learning should be personal, interactive, and fun. 
-            Our AI-powered platform adapts to your learning style, pace, and goals to create 
-            a truly personalized educational experience for mastering English.
+      <div class="about-content">
+        <div class="about-story">
+          <div class="about-icon">
+            <i data-lucide="user"></i>
+          </div>
+          <h3>Our Story</h3>
+          <p>
+            Founded by a simple accountant who struggled to learn English himself, Liwi was born from personal 
+            experience with language barriers. Understanding the challenges faced by millions of learners, 
+            we created an AI-powered solution that makes English accessible to everyone.
           </p>
-          <p style="color: #d1d5db; margin-bottom: 2rem;">
-            Founded by language learning experts and AI researchers, we combine cutting-edge 
-            technology with proven pedagogical methods to help millions of learners achieve 
-            their English language goals faster and more effectively.
+        </div>
+
+        <div class="about-mission">
+          <div class="about-icon">
+            <i data-lucide="target"></i>
+          </div>
+          <h3>Our Mission</h3>
+          <p>
+            Make 500 million English learners from underserved regions fluent in English, breaking down 
+            language barriers worldwide. We believe everyone deserves the opportunity to communicate 
+            confidently in English.
           </p>
-          <div class="beta-badge">
-            <span>🚀 Beta Phase: Focusing on English</span>
+        </div>
+
+        <div class="about-vision">
+          <div class="about-icon">
+            <i data-lucide="zap"></i>
+          </div>
+          <h3>Our Vision</h3>
+          <p>
+            Learn smarter. Learn faster. Learn with AI. We envision a world where advanced technology 
+            makes quality English education accessible to everyone, regardless of their background or location.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- App Flow Section -->
+  <section class="app-flow" id="app-flow">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">
+          How <span class="gradient-text">Liwi</span> Works
+        </h2>
+        <p class="section-subtitle">
+          Experience the complete journey from assessment to mastery with our AI-powered English tutor
+        </p>
+      </div>
+
+      <div class="flow-steps">
+        <!-- Step 1: Start at Your Level -->
+        <div class="flow-step">
+          <div class="step-content">
+            <div class="step-number">1</div>
+            <h3 class="step-title">Start at Your Level</h3>
+            <p class="step-description">
+              Begin with a quick assessment to match your current English skills. Whether you're a beginner, 
+              intermediate, advanced, or professional - we'll find your perfect starting point.
+            </p>
+            <ul class="step-features">
+              <li><i data-lucide="check"></i> Quick 5-minute skill assessment</li>
+              <li><i data-lucide="check"></i> Adaptive difficulty matching</li>
+              <li><i data-lucide="check"></i> Beginner to professional levels</li>
+            </ul>
+          </div>
+          <div class="step-visual">
+            <div class="step-phone">
+              <div class="step-phone-frame">
+                <div class="step-phone-screen">
+                  <img src="assets/images/leveltestpage.JPG" alt="Level Assessment" class="step-screenshot">
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="card">
-          <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
-            <span class="check-icon">✓</span>
-            <span>AI-Powered English Personalization</span>
+
+        <!-- Step 2: Tell Us What You Love -->
+        <div class="flow-step">
+          <div class="step-content">
+            <div class="step-number">2</div>
+            <h3 class="step-title">Tell Us What You Love</h3>
+            <p class="step-description">
+              Select your interests - whether it's travel, food, business, books, or any topic that excites you. 
+              Learn English through conversations about what you're passionate about.
+            </p>
+            <ul class="step-features">
+              <li><i data-lucide="check"></i> 50+ conversation topics available</li>
+              <li><i data-lucide="check"></i> Personalized content matching</li>
+              <li><i data-lucide="check"></i> Interest-based learning approach</li>
+            </ul>
           </div>
-          <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
-            <span class="check-icon">✓</span>
-            <span>Real-time English Conversation Practice</span>
+          <div class="step-visual">
+            <div class="step-phone">
+              <div class="step-phone-frame">
+                <div class="step-phone-screen">
+                  <img src="assets/images/interestselectingpage.JPG" alt="Interest Selection" class="step-screenshot">
+                </div>
+              </div>
+            </div>
           </div>
-          <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
-            <span class="check-icon">✓</span>
-            <span>Progress Tracking & Analytics</span>
+        </div>
+
+        <!-- Step 3: Your AI Study Buddy is Ready -->
+        <div class="flow-step">
+          <div class="step-content">
+            <div class="step-number">3</div>
+            <h3 class="step-title">Your AI Study Buddy is Ready</h3>
+            <p class="step-description">
+              Get a personalized study path with 24/7 access to your AI tutor. Your intelligent companion 
+              is ready to guide you through every step of your English learning journey.
+            </p>
+            <ul class="step-features">
+              <li><i data-lucide="check"></i> Personalized AI tutor assignment</li>
+              <li><i data-lucide="check"></i> Custom learning pathway creation</li>
+              <li><i data-lucide="check"></i> 24/7 availability guarantee</li>
+            </ul>
           </div>
-          <div style="display: flex; align-items: center; gap: 1rem;">
-            <span class="check-icon">✓</span>
-            <span>Cultural Context Learning</span>
+          <div class="step-visual">
+            <div class="step-phone">
+              <div class="step-phone-frame">
+                <div class="step-phone-screen">
+                  <img src="assets/images/allsetpage.JPG" alt="AI Tutor Ready" class="step-screenshot">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 4: Start Natural Conversations -->
+        <div class="flow-step">
+          <div class="step-content">
+            <div class="step-number">4</div>
+            <h3 class="step-title">Start Natural Conversations</h3>
+            <p class="step-description">
+              Begin speaking with Liwi about topics that interest you. Our AI adapts to your level and 
+              provides engaging, contextual conversations in a safe, judgment-free environment.
+            </p>
+            <ul class="step-features">
+              <li><i data-lucide="check"></i> Natural conversation flow</li>
+              <li><i data-lucide="check"></i> Contextual topic discussions</li>
+              <li><i data-lucide="check"></i> Safe learning environment</li>
+            </ul>
+          </div>
+          <div class="step-visual">
+            <div class="step-phone">
+              <div class="step-phone-frame">
+                <div class="step-phone-screen">
+                  <img src="assets/images/aitutorpage.JPG" alt="Natural Conversations" class="step-screenshot">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+       <!-- Step 5: Simple and Friendly Interface -->
+        <div class="flow-step">
+          <div class="step-content">
+            <div class="step-number">5</div>
+            <h3 class="step-title">Simple & Friendly Interface</h3>
+            <p class="step-description">
+              Experience our beautifully designed, intuitive interface that makes learning enjoyable. 
+              Clean design, easy navigation, and friendly visuals create a welcoming environment 
+              where you can focus on improving your English without any distractions.
+            </p>
+            <ul class="step-features">
+              <li><i data-lucide="check"></i> Intuitive and user-friendly design</li>
+              <li><i data-lucide="check"></i> Clean interface with easy navigation</li>
+              <li><i data-lucide="check"></i> Welcoming visuals and smooth interactions</li>
+            </ul>
+          </div>
+          <div class="step-visual">
+            <div class="step-phone">
+              <div class="step-phone-frame">
+                <div class="step-phone-screen">
+                  <img src="assets/images/homescreenpage.JPG" alt="Simple Friendly Interface" class="step-screenshot">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 6: Track Your Progress -->
+        <div class="flow-step">
+          <div class="step-content">
+            <div class="step-number">6</div>
+            <h3 class="step-title">Track Your Progress & Master English</h3>
+            <p class="step-description">
+              Monitor your improvement with detailed analytics and progress reports. Transform from hesitant 
+              speaker to confident communicator with data-driven insights and achievement tracking.
+            </p>
+            <ul class="step-features">
+              <li><i data-lucide="check"></i> Comprehensive progress analytics</li>
+              <li><i data-lucide="check"></i> Weekly improvement reports</li>
+              <li><i data-lucide="check"></i> Achievement badges and milestones</li>
+            </ul>
+          </div>
+          <div class="step-visual">
+            <div class="step-phone">
+              <div class="step-phone-frame">
+                <div class="step-phone-screen">
+                  <img src="assets/images/progresspage.jpg" alt="Progress Tracking" class="step-screenshot">
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+    </div>
+  </section>
 
-      <div class="grid-4">
-        <div class="stat-item">
-          <div class="stat-icon">🇺🇸</div>
-          <div class="stat-number">English</div>
-          <div class="stat-label">Primary Focus</div>
+  <!-- Comparison Section -->
+  <section class="comparison" id="comparison">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">
+          Why Choose <span class="gradient-text">Liwi AI</span>?
+        </h2>
+        <p class="section-subtitle">
+          See how Liwi AI revolutionizes English learning compared to traditional coaching institutes
+        </p>
+      </div>
+
+      <div class="comparison-table-container">
+        <div class="comparison-table">
+          <div class="table-header">
+            <div class="header-cell empty"></div>
+            <div class="header-cell coaching">
+              <div class="header-icon">
+                <i data-lucide="users"></i>
+              </div>
+              <h3>Traditional Coaching</h3>
+            </div>
+            <div class="header-cell liwi">
+              <div class="header-icon">
+                <i data-lucide="brain"></i>
+              </div>
+              <h3>Liwi AI</h3>
+            </div>
+          </div>
+
+          <div class="table-row">
+            <div class="feature-cell">
+              <i data-lucide="dollar-sign"></i>
+              <span>Price</span>
+            </div>
+            <div class="coaching-cell">
+              <span class="negative">$200-500/month</span>
+            </div>
+            <div class="liwi-cell">
+              <span class="positive">$29/month</span>
+            </div>
+          </div>
+
+          <div class="table-row">
+            <div class="feature-cell">
+              <i data-lucide="clock"></i>
+              <span>Availability</span>
+            </div>
+            <div class="coaching-cell">
+              <span class="negative">Limited hours</span>
+            </div>
+            <div class="liwi-cell">
+              <span class="positive">24/7 Available</span>
+            </div>
+          </div>
+
+          <div class="table-row">
+            <div class="feature-cell">
+              <i data-lucide="timer"></i>
+              <span>Session Length</span>
+            </div>
+            <div class="coaching-cell">
+              <span class="negative">Fixed 1-2 hours</span>
+            </div>
+            <div class="liwi-cell">
+              <span class="positive">Flexible duration</span>
+            </div>
+          </div>
+
+          <div class="table-row">
+            <div class="feature-cell">
+              <i data-lucide="message-circle"></i>
+              <span>Talk About Any Topic</span>
+            </div>
+            <div class="coaching-cell">
+              <span class="negative">Limited curriculum</span>
+            </div>
+            <div class="liwi-cell">
+              <span class="positive">Unlimited topics</span>
+            </div>
+          </div>
+
+          <div class="table-row">
+            <div class="feature-cell">
+              <i data-lucide="zap"></i>
+              <span>Real-time Feedback</span>
+            </div>
+            <div class="coaching-cell">
+              <span class="negative">Delayed feedback</span>
+            </div>
+            <div class="liwi-cell">
+              <span class="positive">Instant feedback</span>
+            </div>
+          </div>
+
+          <div class="table-row">
+            <div class="feature-cell">
+              <i data-lucide="file-text"></i>
+              <span>Lesson Summary</span>
+            </div>
+            <div class="coaching-cell">
+              <span class="negative">Manual notes</span>
+            </div>
+            <div class="liwi-cell">
+              <span class="positive">AI-generated summary</span>
+            </div>
+          </div>
+
+          <div class="table-row">
+            <div class="feature-cell">
+              <i data-lucide="heart"></i>
+              <span>Learning Pressure</span>
+            </div>
+            <div class="coaching-cell">
+              <span class="negative">High pressure</span>
+            </div>
+            <div class="liwi-cell">
+              <span class="positive">Stress-free environment</span>
+            </div>
+          </div>
         </div>
-        <div class="stat-item">
-          <div class="stat-icon">🎯</div>
-          <div class="stat-number">AI</div>
-          <div class="stat-label">Powered Learning</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="stats" id="stats">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-item fade-in">
+          <div class="stat-icon">
+            <i data-lucide="users"></i>
+          </div>
+          <div class="stat-number">5K+</div>
+          <div class="stat-label">Beta Users</div>
         </div>
-        <div class="stat-item">
-          <div class="stat-icon">📱</div>
-          <div class="stat-number">Beta</div>
-          <div class="stat-label">Coming Soon</div>
+        <div class="stat-item fade-in">
+          <div class="stat-icon">
+            <i data-lucide="message-square"></i>
+          </div>
+          <div class="stat-number">100K+</div>
+          <div class="stat-label">Conversations</div>
         </div>
-        <div class="stat-item">
-          <div class="stat-icon">⚡</div>
-          <div class="stat-number">24/7</div>
-          <div class="stat-label">AI Support</div>
+        <div class="stat-item fade-in">
+          <div class="stat-icon">
+            <i data-lucide="trending-up"></i>
+          </div>
+          <div class="stat-number">89%</div>
+          <div class="stat-label">Improvement Rate</div>
+        </div>
+        <div class="stat-item fade-in">
+          <div class="stat-icon">
+            <i data-lucide="globe"></i>
+          </div>
+          <div class="stat-number">30+</div>
+          <div class="stat-label">Countries</div>
         </div>
       </div>
     </div>
   </section>
 
   <!-- Features Section -->
-  <section id="features" class="section">
-    <div class="fade-in">
-      <h2 class="section-title">
-        Powerful <span class="gradient-text">Features</span>
-      </h2>
-      <p class="section-subtitle">
-        Discover the innovative features that make Liwi the most effective English learning platform.
-      </p>
+  <section class="features" id="features">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">
+          Powerful <span class="gradient-text">Features</span>
+        </h2>
+        <p class="section-subtitle">
+          Discover what makes Liwi the most effective English learning platform
+        </p>
+      </div>
 
-      <div class="grid-3">
-        <div class="card feature-card">
-          <div class="feature-icon icon-purple">🎯</div>
-          <h3 class="feature-title">Personalized English Learning</h3>
-          <p class="feature-desc">AI adapts to your English learning style, pace, and goals for maximum efficiency.</p>
+      <div class="features-grid">
+        <div class="feature-card fade-in">
+          <div class="feature-icon">
+            <i data-lucide="brain"></i>
+          </div>
+          <h3>AI-Powered Conversations</h3>
+          <p>Practice with intelligent AI that adapts to your learning pace and provides real-time feedback on grammar, pronunciation, and fluency.</p>
         </div>
-        <div class="card feature-card">
-          <div class="feature-icon icon-blue">💬</div>
-          <h3 class="feature-title">Interactive English Conversations</h3>
-          <p class="feature-desc">Practice English with AI tutors in realistic conversation scenarios.</p>
+
+        <div class="feature-card fade-in">
+          <div class="feature-icon">
+            <i data-lucide="target"></i>
+          </div>
+          <h3>Personalized Learning</h3>
+          <p>Customized lessons based on your level, goals, and learning preferences for maximum efficiency and engagement.</p>
         </div>
-        <div class="card feature-card">
-          <div class="feature-icon icon-green">📊</div>
-          <h3 class="feature-title">Progress Tracking</h3>
-          <p class="feature-desc">Detailed analytics and insights to monitor your English improvement.</p>
+
+        <div class="feature-card fade-in">
+          <div class="feature-icon">
+            <i data-lucide="mic"></i>
+          </div>
+          <h3>Pronunciation Training</h3>
+          <p>Advanced speech recognition technology helps perfect your pronunciation and accent with detailed feedback.</p>
         </div>
-        <div class="card feature-card">
-          <div class="feature-icon icon-orange">🌍</div>
-          <h3 class="feature-title">Cultural Context</h3>
-          <p class="feature-desc">Learn not just English, but cultural nuances and context.</p>
+
+        <div class="feature-card fade-in">
+          <div class="feature-icon">
+            <i data-lucide="trending-up"></i>
+          </div>
+          <h3>Progress Tracking</h3>
+          <p>Detailed analytics show your improvement over time with actionable insights and achievement milestones.</p>
         </div>
-        <div class="card feature-card">
-          <div class="feature-icon icon-indigo">⚡</div>
-          <h3 class="feature-title">Real-time Feedback</h3>
-          <p class="feature-desc">Instant corrections and suggestions to improve your English faster.</p>
+
+        <div class="feature-card fade-in">
+          <div class="feature-icon">
+            <i data-lucide="clock"></i>
+          </div>
+          <h3>24/7 Availability</h3>
+          <p>Learn whenever you want, wherever you are. Your AI tutor never sleeps and is always ready to help.</p>
         </div>
-        <div class="card feature-card">
-          <div class="feature-icon icon-yellow">🏆</div>
-          <h3 class="feature-title">Gamification</h3>
-          <p class="feature-desc">Earn badges, track streaks, and stay motivated in your English journey.</p>
+
+        <div class="feature-card fade-in">
+          <div class="feature-icon">
+            <i data-lucide="globe"></i>
+          </div>
+          <h3>Cultural Context</h3>
+          <p>Learn not just the language, but cultural nuances and real-world applications for authentic communication.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- App Preview Section -->
-  <section id="app-preview" class="section section-bg">
-    <div class="fade-in">
-      <h2 class="section-title">
-        App <span class="gradient-text">Preview</span>
-      </h2>
-      <p class="section-subtitle">
-        Get a sneak peek at the beautiful and intuitive interface of the Liwi app.
-      </p>
-
-      <div class="app-mockups">
-        <div class="mockup-container">
-          <div class="phone-mockup">
-            <div class="phone-frame">
-              <div class="phone-screen">
-                <div class="screen-content home-screen">
-                  <div class="status-bar">
-                    <span>9:41</span>
-                    <div class="signal-bars">
-                      <span></span>
-                      <span></span>
-                      <span></span>
-                    </div>
-                  </div>
-                  <div class="app-header">
-                    <h3>Welcome to Liwi</h3>
-                    <div class="user-avatar">👋</div>
-                  </div>
-                  <div class="progress-ring">
-                    <div class="ring">
-                      <div class="progress-text">
-                        <span class="level">Level 3</span>
-                        <span class="streak">🔥 7 day streak</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="lesson-cards">
-                    <div class="lesson-card active">
-                      <span class="lesson-icon">💬</span>
-                      <span>Daily Conversation</span>
-                    </div>
-                    <div class="lesson-card">
-                      <span class="lesson-icon">📚</span>
-                      <span>Grammar Focus</span>
-                    </div>
-                    <div class="lesson-card">
-                      <span class="lesson-icon">🎯</span>
-                      <span>Pronunciation</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <p class="mockup-label">Home Screen</p>
-          </div>
-
-          <div class="phone-mockup">
-            <div class="phone-frame">
-              <div class="phone-screen">
-                <div class="screen-content chat-screen">
-                  <div class="status-bar">
-                    <span>9:41</span>
-                    <div class="signal-bars">
-                      <span></span>
-                      <span></span>
-                      <span></span>
-                    </div>
-                  </div>
-                  <div class="chat-header">
-                    <div class="ai-avatar">🤖</div>
-                    <div>
-                      <h4>AI Tutor Sarah</h4>
-                      <span>Online</span>
-                    </div>
-                  </div>
-                  <div class="chat-messages">
-                    <div class="message ai-message">
-                      <p>Hello! Let's practice ordering food in English. I'll be the waiter. 😊</p>
-                    </div>
-                    <div class="message user-message">
-                      <p>Hi! I'd like to order a coffee please.</p>
-                    </div>
-                    <div class="message ai-message">
-                      <p>Great! What size would you like? We have small, medium, and large.</p>
-                    </div>
-                    <div class="typing-indicator">
-                      <span></span>
-                      <span></span>
-                      <span></span>
-                    </div>
-                  </div>
-                  <div class="chat-input">
-                    <input type="text" placeholder="Type your response...">
-                    <button>🎤</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <p class="mockup-label">AI Conversation</p>
-          </div>
-
-          <div class="phone-mockup">
-            <div class="phone-frame">
-              <div class="phone-screen">
-                <div class="screen-content progress-screen">
-                  <div class="status-bar">
-                    <span>9:41</span>
-                    <div class="signal-bars">
-                      <span></span>
-                      <span></span>
-                      <span></span>
-                    </div>
-                  </div>
-                  <div class="progress-header">
-                    <h3>Your Progress</h3>
-                    <span class="date">This Week</span>
-                  </div>
-                  <div class="stats-grid">
-                    <div class="stat-box">
-                      <span class="stat-number">45</span>
-                      <span class="stat-label">Minutes</span>
-                    </div>
-                    <div class="stat-box">
-                      <span class="stat-number">12</span>
-                      <span class="stat-label">Lessons</span>
-                    </div>
-                    <div class="stat-box">
-                      <span class="stat-number">89%</span>
-                      <span class="stat-label">Accuracy</span>
-                    </div>
-                    <div class="stat-box">
-                      <span class="stat-number">7</span>
-                      <span class="stat-label">Streak</span>
-                    </div>
-                  </div>
-                  <div class="progress-chart">
-                    <div class="chart-bars">
-                      <div class="bar" style="height: 60%"></div>
-                      <div class="bar" style="height: 80%"></div>
-                      <div class="bar" style="height: 45%"></div>
-                      <div class="bar" style="height: 90%"></div>
-                      <div class="bar" style="height: 70%"></div>
-                      <div class="bar" style="height: 95%"></div>
-                      <div class="bar" style="height: 85%"></div>
-                    </div>
-                    <div class="chart-labels">
-                      <span>Mon</span>
-                      <span>Tue</span>
-                      <span>Wed</span>
-                      <span>Thu</span>
-                      <span>Fri</span>
-                      <span>Sat</span>
-                      <span>Sun</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <p class="mockup-label">Progress Tracking</p>
-          </div>
-        </div>
+  <!-- FAQ Section -->
+  <section class="faq" id="faq">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">
+          Frequently Asked <span class="gradient-text">Questions</span>
+        </h2>
+        <p class="section-subtitle">
+          Find answers to common questions about Liwi and how our AI-powered English tutoring works
+        </p>
       </div>
-    </div>
-  </section>
 
-  <!-- Testimonials Section -->
-  <section id="testimonials" class="section">
-    <div class="fade-in">
-      <h2 class="section-title">
-        What Our <span class="gradient-text">Beta Users Say</span>
-      </h2>
-      <p class="section-subtitle">
-        Join thousands of excited learners waiting to transform their English skills with Liwi.
-      </p>
-
-      <div class="testimonials-container">
-        <div class="testimonials-track" id="testimonials-track">
-          <div class="card testimonial-card">
-            <div class="testimonial-header">
-              <div class="testimonial-avatar">👩‍💻</div>
-              <div>
-                <div class="testimonial-name">Sarah Johnson</div>
-                <div class="testimonial-role">Software Engineer</div>
-              </div>
-            </div>
-            <div class="stars">
-              <span class="star">★</span>
-              <span class="star">★</span>
-              <span class="star">★</span>
-              <span class="star">★</span>
-              <span class="star">★</span>
-            </div>
-            <p>"The beta preview looks incredible! The AI conversations feel so natural. Can't wait for the full release!"</p>
+      <div class="faq-container">
+        <div class="faq-item">
+          <div class="faq-question">
+            <h3>How do I practice with LIWI?</h3>
+            <i data-lucide="chevron-down"></i>
           </div>
-
-          <div class="card testimonial-card">
-            <div class="testimonial-header">
-              <div class="testimonial-avatar">👨‍💼</div>
-              <div>
-                <div class="testimonial-name">Carlos Rodriguez</div>
-                <div class="testimonial-role">Business Manager</div>
-              </div>
-            </div>
-            <div class="stars">
-              <span class="star">★</span>
-              <span class="star">★</span>
-              <span class="star">★</span>
-              <span class="star">★</span>
-              <span class="star">★</span>
-            </div>
-            <p>"Finally, an English learning app that understands business needs. The cultural context lessons will be game-changing!"</p>
-          </div>
-
-          <div class="card testimonial-card">
-            <div class="testimonial-header">
-              <div class="testimonial-avatar">👩‍🎓</div>
-              <div>
-                <div class="testimonial-name">Yuki Tanaka</div>
-                <div class="testimonial-role">Student</div>
-              </div>
-            </div>
-            <div class="stars">
-              <span class="star">★</span>
-              <span class="star">★</span>
-              <span class="star">★</span>
-              <span class="star">★</span>
-              <span class="star">★</span>
-            </div>
-            <p>"The preview showed me exactly what I need - personalized English practice that adapts to my level. Excited for June!"</p>
-          </div>
-
-          <div class="card testimonial-card">
-            <div class="testimonial-header">
-              <div class="testimonial-avatar">👨‍🔬</div>
-              <div>
-                <div class="testimonial-name">Ahmed Hassan</div>
-                <div class="testimonial-role">Research Scientist</div>
-              </div>
-            </div>
-            <div class="stars">
-              <span class="star">★</span>
-              <span class="star">★</span>
-              <span class="star">★</span>
-              <span class="star">★</span>
-              <span class="star">★</span>
-            </div>
-            <p>"The AI technology behind Liwi is impressive. It truly understands context and provides meaningful feedback."</p>
-          </div>
-
-          <div class="card testimonial-card">
-            <div class="testimonial-header">
-              <div class="testimonial-avatar">👩‍⚕️</div>
-              <div>
-                <div class="testimonial-name">Maria Silva</div>
-                <div class="testimonial-role">Healthcare Professional</div>
-              </div>
-            </div>
-            <div class="stars">
-              <span class="star">★</span>
-              <span class="star">★</span>
-              <span class="star">★</span>
-              <span class="star">★</span>
-              <span class="star">★</span>
-            </div>
-            <p>"As someone who needs professional English skills, Liwi's approach to real-world scenarios is exactly what I need."</p>
-          </div>
-
-          <div class="card testimonial-card">
-            <div class="testimonial-header">
-              <div class="testimonial-avatar">👨‍🎨</div>
-              <div>
-                <div class="testimonial-name">David Kim</div>
-                <div class="testimonial-role">Creative Designer</div>
-              </div>
-            </div>
-            <div class="stars">
-              <span class="star">★</span>
-              <span class="star">★</span>
-              <span class="star">★</span>
-              <span class="star">★</span>
-              <span class="star">★</span>
-            </div>
-            <p>"The app design is beautiful and intuitive. Learning English has never looked so appealing and engaging!"</p>
-          </div>
-
-          <div class="card testimonial-card">
-            <div class="testimonial-header">
-              <div class="testimonial-avatar">👩‍🏫</div>
-              <div>
-                <div class="testimonial-name">Elena Petrov</div>
-                <div class="testimonial-role">Language Teacher</div>
-              </div>
-            </div>
-            <div class="stars">
-              <span class="star">★</span>
-              <span class="star">★</span>
-              <span class="star">★</span>
-              <span class="star">★</span>
-              <span class="star">★</span>
-            </div>
-            <p>"As an educator, I'm amazed by Liwi's pedagogical approach. It combines the best of AI with proven teaching methods."</p>
-          </div>
-
-          <div class="card testimonial-card">
-            <div class="testimonial-header">
-              <div class="testimonial-avatar">👨‍💻</div>
-              <div>
-                <div class="testimonial-name">Raj Patel</div>
-                <div class="testimonial-role">Tech Entrepreneur</div>
-              </div>
-            </div>
-            <div class="stars">
-              <span class="star">★</span>
-              <span class="star">★</span>
-              <span class="star">★</span>
-              <span class="star">★</span>
-              <span class="star">★</span>
-            </div>
-            <p>"The AI-powered conversations are revolutionary. This will change how people learn English globally!"</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Contact Section -->
-  <section id="contact" class="section section-bg">
-    <div class="fade-in">
-      <h2 class="section-title">
-        Get In <span class="gradient-text">Touch</span>
-      </h2>
-      <p class="section-subtitle">
-        Have questions about Liwi? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
-      </p>
-
-      <div class="grid-2">
-        <div>
-          <h3 style="font-size: 1.5rem; margin-bottom: 2rem;">Contact Information</h3>
-          
-          <div class="contact-info">
-            <div class="contact-item">
-              <div class="contact-icon">✉️</div>
-              <div>
-                <h4 style="margin-bottom: 0.25rem;">Email</h4>
-                <p style="color: #9ca3af;">myliwiai@gmail.com</p>
-              </div>
-            </div>
-
-            <div class="contact-item">
-              <div class="contact-icon">📞</div>
-              <div>
-                <h4 style="margin-bottom: 0.25rem;">Phone</h4>
-                <p style="color: #9ca3af;">+1 (555) 123-4567</p>
-              </div>
-            </div>
-
-            <div class="contact-item">
-              <div class="contact-icon">📍</div>
-              <div>
-                <h4 style="margin-bottom: 0.25rem;">Address</h4>
-                <p style="color: #9ca3af;">123 Innovation Drive<br>San Francisco, CA 94105</p>
-              </div>
-            </div>
-          </div>
-
-          <h4 style="margin-bottom: 1rem;">Follow Us</h4>
-          <div class="social-links">
-            <a href="#" class="social-link">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-              </svg>
-            </a>
-            <a href="#" class="social-link">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
-              </svg>
-            </a>
-            <a href="#" class="social-link">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-              </svg>
-            </a>
-            <a href="#" class="social-link">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-              </svg>
-            </a>
+          <div class="faq-answer">
+            <p>Download LIWI app, complete a quick assessment, then practice daily with our AI tutor. Complete lessons, earn gems, and track your confidence improvement. Just 10-15 minutes daily is enough for great results.</p>
           </div>
         </div>
 
-        <div class="card">
-          <form id="contact-form">
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
-              <div class="form-group">
-                <label class="form-label">Name</label>
-                <input type="text" name="name" class="form-input" placeholder="Your name" required>
-              </div>
-              <div class="form-group">
-                <label class="form-label">Email</label>
-                <input type="email" name="email" class="form-input" placeholder="your.email@example.com" required>
-              </div>
-            </div>
+        <div class="faq-item">
+          <div class="faq-question">
+            <h3>How does the free trial work?</h3>
+            <i data-lucide="chevron-down"></i>
+          </div>
+          <div class="faq-answer">
+            <p>Get 3 days of full premium access completely free. No credit card required. Try all features including AI tutor and advanced lessons. Cancel anytime within 3 days for zero charges.</p>
+          </div>
+        </div>
 
-            <div class="form-group">
-              <label class="form-label">Subject</label>
-              <input type="text" name="subject" class="form-input" placeholder="What's this about?" required>
-            </div>
+        <div class="faq-item">
+          <div class="faq-question">
+            <h3>How do I cancel my free trial?</h3>
+            <i data-lucide="chevron-down"></i>
+          </div>
+          <div class="faq-answer">
+            <p>Go to Profile → Settings → Cancel Trial in the app. Or cancel through your phone's subscription settings. You can also email info@myliwi.com. No charges if you cancel within 3 days.</p>
+          </div>
+        </div>
 
-            <div class="form-group">
-              <label class="form-label">Message</label>
-              <textarea name="message" class="form-textarea" placeholder="Tell us more about your inquiry..." required></textarea>
-            </div>
+        <div class="faq-item">
+          <div class="faq-question">
+            <h3>Can I sign up multiple times with different numbers?</h3>
+            <i data-lucide="chevron-down"></i>
+          </div>
+          <div class="faq-answer">
+            <p>No, only one free trial per device. You cannot use multiple phone numbers on the same device for additional trials. Each family member can get their own trial on separate devices.</p>
+          </div>
+        </div>
 
-            <button type="submit" class="btn btn-primary btn-tall">
-              Send Message →
-            </button>
-          </form>
+        <div class="faq-item">
+          <div class="faq-question">
+            <h3>Can I become fluent in English in 30 days?</h3>
+            <i data-lucide="chevron-down"></i>
+          </div>
+          <div class="faq-answer">
+            <p>LIWI can make you 40-60% more confident in 30 days and help you handle daily conversations. Full fluency takes 3-6 months with consistent practice. Practice 10-20 minutes daily for best results.</p>
+          </div>
+        </div>
+
+        <div class="faq-support">
+          <div class="support-icon">
+            <i data-lucide="help-circle"></i>
+          </div>
+          <h3>Need More Help?</h3>
+          <p>Email us at <a href="mailto:info@myliwi.com">info@myliwi.com</a> or use in-app chat for personalized support.</p>
         </div>
       </div>
     </div>
@@ -742,251 +611,227 @@
 
   <!-- Footer -->
   <footer class="footer">
-    <div class="footer-content">
-      <div class="footer-grid">
-        <div class="footer-section">
-          <div class="logo" style="margin-bottom: 1.5rem;">
-            <div class="logo-icon">L</div>
-            <span class="logo-text">Liwi</span>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <img src="assets/images/liwi_logo.png" alt="Liwi Logo" class="footer-logo-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+            <span class="footer-logo-text" style="display: none;">liwi</span>
           </div>
-          <p style="color: #9ca3af; margin-bottom: 1.5rem;">
-            Transforming English learning with AI-powered personalized tutoring for learners worldwide.
-          </p>
-          <div class="social-links">
-            <a href="#" class="social-link">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-              </svg>
-            </a>
-            <a href="#" class="social-link">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
-              </svg>
-            </a>
-            <a href="#" class="social-link">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-              </svg>
-            </a>
-            <a href="#" class="social-link">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.40s-.644-1.44-1.439-1.44z"/>
-              </svg>
-            </a>
+          <p>Your AI English companion, making fluent conversations accessible to everyone.</p>
+        </div>
+        
+        <div class="footer-links">
+          <div class="footer-section">
+            <h4>Legal</h4>
+            <ul>
+              <li><a href="#terms" id="terms-link">Terms of Service</a></li>
+              <li><a href="#privacy" id="privacy-link">Privacy Policy</a></li>
+            </ul>
           </div>
-        </div>
-
-        <div class="footer-section">
-          <h4>Product</h4>
-          <ul class="footer-links">
-            <li><a href="#features">Features</a></li>
-            <li><a href="#app-preview">App Preview</a></li>
-            <li><a href="#notify">Beta Access</a></li>
-            <li><a href="#">Coming Soon</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-section">
-          <h4>Company</h4>
-          <ul class="footer-links">
-            <li><a href="#about">About Us</a></li>
-            <li><a href="#">Careers</a></li>
-            <li><a href="#">Blog</a></li>
-            <li><a href="#">Press</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-section">
-          <h4>Support</h4>
-          <ul class="footer-links">
-            <li><a href="#">Help Center</a></li>
-            <li><a href="#contact">Contact Us</a></li>
-            <li><a href="#privacy" onclick="showPrivacyPolicy()">Privacy Policy</a></li>
-            <li><a href="#terms" onclick="showTermsOfService()">Terms of Service</a></li>
-          </ul>
+          <div class="footer-section">
+            <h4>Support</h4>
+            <ul>
+              <li><a href="#faq">FAQ</a></li>
+              <li><a href="mailto:info@myliwi.com">Contact Us</a></li>
+            </ul>
+          </div>
         </div>
       </div>
 
       <div class="footer-bottom">
-        <p class="footer-text">© 2025 Liwi. All rights reserved.</p>
-        <p class="footer-text">Made with ❤️ for English learners worldwide</p>
+        <p>&copy; 2025 Liwi. All rights reserved.</p>
       </div>
     </div>
   </footer>
 
-  <!-- Privacy Policy Modal -->
-  <div id="privacy-modal" class="legal-modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>Privacy Policy - LIWI</h2>
-        <span class="close-modal" onclick="closeLegalModal()">&times;</span>
-      </div>
-      <div class="modal-body">
-        <p class="effective-date"><strong>Effective Date: June 3, 2025</strong></p>
-        
-        <p>At LIWI, your personal English companion, we are dedicated to protecting your privacy and earning your trust as you grow your English fluency. This Privacy Policy explains how we collect, use, share, and safeguard your information when you visit our website myliwi.com or use our app, including for users as young as 10. By using LIWI, you (or your parent/guardian, if under 18) agree to these practices.</p>
-
-        <h3>1. Information We Collect</h3>
-        <p>We collect data to deliver a personalized and engaging learning experience:</p>
-        <ul>
-          <li><strong>Personal Information:</strong> Name, email address, phone number, and age (to tailor content, especially for children) when you register. Payment details are collected for premium subscriptions (pricing TBD).</li>
-          <li><strong>Usage Data:</strong> App/website interactions (e.g., dialogue modules completed, practice time), device details (IP address, browser type), and analytics.</li>
-          <li><strong>User-Generated Content:</strong> Voice recordings, text inputs, and feedback from practice sessions to enhance AI and user experience.</li>
-          <li><strong>Cookies:</strong> We use cookies to improve functionality and track preferences. You can manage settings via your browser.</li>
-        </ul>
-
-        <h3>2. How We Use Your Information</h3>
-        <p>Your data powers LIWI's mission to make learning feel like a conversation with a friend:</p>
-        <ul>
-          <li><strong>Personalized Learning:</strong> Customize dialogue modules (e.g., school conversations for kids, job interviews for adults) and pronunciation feedback.</li>
-          <li><strong>Service Delivery:</strong> Manage accounts, process payments for premium features, and provide support.</li>
-          <li><strong>Improvement:</strong> Analyze usage to refine AI (targeting 90% response accuracy) and app features.</li>
-          <li><strong>Marketing:</strong> Send updates or promotions (with consent for adults, parental consent for children).</li>
-          <li><strong>Analytics:</strong> Track trends to enhance our freemium model and achieve 50+ NPS.</li>
-        </ul>
-
-        <h3>3. How We Share Your Information</h3>
-        <p>We share data only when necessary, with strict protections:</p>
-        <ul>
-          <li><strong>Service Providers:</strong> Trusted partners (e.g., AWS for hosting, Google Dialogflow for WhatsApp integration, payment processors) under confidentiality agreements.</li>
-          <li><strong>Legal Compliance:</strong> If required by law or to protect LIWI's rights (e.g., fraud prevention).</li>
-          <li><strong>No Third-Party Sales:</strong> Your data is never sold to advertisers or unrelated parties.</li>
-        </ul>
-
-        <h3>4. Data Security</h3>
-        <p>We safeguard your information, especially for young users:</p>
-        <ul>
-          <li><strong>Encryption:</strong> Data is encrypted in transit and at rest (SSL/TLS, AES-256).</li>
-          <li><strong>Access Controls:</strong> Limited to authorized personnel only.</li>
-          <li><strong>Compliance:</strong> Adheres to GDPR (EU), CCPA (California), India's DPDP Act, and COPPA (US) for children.</li>
-          <li><strong>Retention:</strong> Personal data is kept only as needed (e.g., account duration, legal obligations). Voice recordings are deleted after 30 days unless opted for analysis.</li>
-        </ul>
-
-        <h3>5. Your Rights</h3>
-        <p>You (or your parent/guardian, if under 18) control your data:</p>
-        <ul>
-          <li><strong>Access & Correction:</strong> View or update information via your account or by contacting us.</li>
-          <li><strong>Deletion:</strong> Request data deletion (subject to legal requirements).</li>
-          <li><strong>Opt-Out:</strong> Unsubscribe from marketing or disable cookies.</li>
-          <li><strong>Portability:</strong> Request a data copy in a structured format.</li>
-        </ul>
-        <p>Email <a href="mailto:myliwiai@gmail.com">myliwiai@gmail.com</a> to exercise these rights.</p>
-
-        <h3>6. Children's Privacy</h3>
-        <p>LIWI welcomes users aged 10 and up, with special care for young learners:</p>
-        <ul>
-          <li><strong>Parental Consent:</strong> For users under 18, we require verifiable parental consent (e.g., email verification) to collect personal data.</li>
-          <li><strong>Limited Data:</strong> We collect minimal data from children (e.g., name, age, practice inputs) to ensure safe, age-appropriate learning.</li>
-          <li><strong>No Ads for Kids:</strong> Free features for children are ad-free to protect their experience.</li>
-          <li><strong>Parental Controls:</strong> Parents can review, manage, or delete their child's data via our support channels.</li>
-        </ul>
-        <p>If you believe your child provided data without consent, contact us to remove it.</p>
-
-        <h3>7. International Data Transfers</h3>
-        <p>LIWI operates globally, and data may be processed in secure servers (e.g., AWS regions). We comply with cross-border regulations (e.g., GDPR's Standard Contractual Clauses).</p>
-
-        <h3>8. Third-Party Links</h3>
-        <p>Our website/app may link to external platforms (e.g., X, Google Play). We're not responsible for their privacy practices. Review their policies before engaging.</p>
-
-        <h3>9. Changes to This Policy</h3>
-        <p>We may update this policy as LIWI evolves (e.g., new features, pricing). Changes will be posted here with an updated effective date. Check periodically.</p>
-
-        <h3>10. Contact Us</h3>
-        <p>Questions or concerns? We're here for you!</p>
-        <p><strong>Support:</strong> <a href="mailto:myliwiai@gmail.com">myliwiai@gmail.com</a></p>
-        
-        <p><em>At LIWI, your privacy is as precious as your voice. We're committed to protecting your data while empowering your English journey, especially for our youngest learners. Thank you for choosing LIWI as your companion.</em></p>
-      </div>
-    </div>
-  </div>
-
+  <!-- Legal Modals -->
   <!-- Terms of Service Modal -->
-  <div id="terms-modal" class="legal-modal">
+  <div class="modal" id="terms-modal">
     <div class="modal-content">
       <div class="modal-header">
-        <h2>Terms of Service - LIWI</h2>
-        <span class="close-modal" onclick="closeLegalModal()">&times;</span>
+        <h2>Terms of Service</h2>
+        <button class="modal-close" id="terms-close">
+          <i data-lucide="x"></i>
+        </button>
       </div>
       <div class="modal-body">
-        <p class="effective-date"><strong>Effective Date: June 3, 2025</strong></p>
-        
-        <p>Welcome to LIWI, your personal English companion! These Terms of Service ("Terms") govern your use of the LIWI app and website myliwi.com (collectively, "Services"). By accessing or using our Services, you (or your parent/guardian, if under 18) agree to these Terms. If you disagree, please do not use LIWI.</p>
-
-        <h3>1. Eligibility</h3>
-        <ul>
-          <li><strong>Age:</strong> LIWI is available for users aged 10 and up. Users under 18 require parental consent, verified during registration, to comply with COPPA and other regulations.</li>
-          <li><strong>Account:</strong> You must create an account with accurate information (e.g., name, email). You're responsible for maintaining account security and notifying us of unauthorized access.</li>
-        </ul>
-
-        <h3>2. Use of Services</h3>
-        <p>LIWI helps you improve English fluency through AI-driven features. You agree to:</p>
-        <ul>
-          <li><strong>Permitted Use:</strong> Use Services for personal, non-commercial learning (e.g., dialogue practice, pronunciation feedback).</li>
-          <li><strong>Prohibited Actions:</strong> Do not misuse Services, including:
-            <ul>
-              <li>Sharing accounts or login credentials.</li>
-              <li>Uploading harmful content (e.g., malware, offensive material).</li>
-              <li>Reverse-engineering or modifying the app.</li>
-              <li>Violating laws or third-party rights.</li>
-            </ul>
-          </li>
-          <li><strong>Content Ownership:</strong> You retain ownership of user-generated content (e.g., voice recordings, text inputs). You grant LIWI a non-exclusive, worldwide, royalty-free license to use this content to provide and improve Services (e.g., AI training, feedback analysis).</li>
-        </ul>
-
-        <h3>3. Freemium Model and Payments</h3>
-        <ul>
-          <li><strong>Free Tier:</strong> Basic features (e.g., limited dialogue modules) are free.</li>
-          <li><strong>Premium Tier:</strong> Advanced features require a subscription (pricing to be determined). Payments are processed securely via third-party providers.</li>
-          <li><strong>Refunds:</strong> Refunds, if applicable, follow our refund policy (available upon pricing finalization).</li>
-          <li><strong>Changes:</strong> We may adjust pricing or features with notice via email or the app.</li>
-        </ul>
-
-        <h3>4. Intellectual Property</h3>
-        <ul>
-          <li><strong>LIWI's Rights:</strong> All app content, AI technology (e.g., Hugging Face, Google Dialogflow integrations), and branding are owned by LIWI or its licensors. You may not copy, distribute, or modify them without permission.</li>
-          <li><strong>Feedback:</strong> Suggestions or feedback you provide may be used to improve LIWI without obligation or compensation.</li>
-        </ul>
-
-        <h3>5. Privacy</h3>
-        <p>Your data is protected as outlined in our <a href="#privacy" onclick="showPrivacyPolicy(); closeLegalModal();">Privacy Policy</a>. We prioritize security (e.g., encryption, GDPR/DPDP Act compliance) and minimal data collection for children under 18.</p>
-
-        <h3>6. User Conduct</h3>
-        <p>To keep LIWI safe and welcoming:</p>
-        <ul>
-          <li>Respect others' rights and avoid harmful behavior (e.g., harassment, hate speech).</li>
-          <li>For users aged 10-17, parents/guardians are responsible for monitoring usage.</li>
-          <li>Report issues via <a href="mailto:myliwiai@gmail.com">myliwiai@gmail.com</a>.</li>
-        </ul>
-
-        <h3>7. Termination</h3>
-        <ul>
-          <li><strong>By You:</strong> Delete your account anytime via app settings.</li>
-          <li><strong>By LIWI:</strong> We may suspend or terminate access for violations (e.g., misuse, non-payment) with notice, except in urgent cases (e.g., illegal activity).</li>
-        </ul>
-        <p>Upon termination, your access ends, and we may delete your data per our Privacy Policy.</p>
-
-        <h3>8. Disclaimers and Limitations</h3>
-        <ul>
-          <li><strong>As-Is:</strong> LIWI is provided "as is" without warranties. We aim for 90% AI accuracy and 99.9% uptime but cannot guarantee error-free performance.</li>
-          <li><strong>Liability:</strong> LIWI is not liable for indirect damages (e.g., lost opportunities) or losses beyond our control (e.g., internet issues). Liability is limited to the amount paid (if any) in the past 12 months.</li>
-          <li><strong>Learning Outcomes:</strong> While we target 20% fluency improvement, results vary based on individual effort.</li>
-        </ul>
-
-        <h3>9. Governing Law</h3>
-        <p>These Terms are governed by the laws of India, with disputes resolved in courts at Kozhikode. For international users, we comply with local regulations (e.g., GDPR for EU, CCPA for California).</p>
-
-        <h3>10. Changes to Terms</h3>
-        <p>We may update these Terms to reflect new features or legal requirements. Changes will be posted on our website with an updated effective date. Continued use after changes indicates acceptance.</p>
-
-        <h3>11. Contact Us</h3>
-        <p>Questions or concerns? Reach out:</p>
-        <p><strong>Support:</strong> <a href="mailto:myliwiai@gmail.com">myliwiai@gmail.com</a> or our website's contact form or in-app support.</p>
-        
-        <p><em>Thank you for choosing LIWI as your English fluency companion. We're excited to support your journey and help your voice soar!</em></p>
+        <div class="legal-document">
+          <p class="effective-date"><strong>Effective Date:</strong> July 07, 2025 | <strong>Last Updated:</strong> July 07, 2025</p>
+          
+          <h3>1. Introduction and Acceptance</h3>
+          <p>Welcome to LIWI, an AI-powered English tutoring application designed to improve your English speaking fluency. These Terms of Service ("Terms") constitute a legally binding agreement between you ("User," "you," or "your") and Liwi Learning Solutions PVT, a company incorporated under the laws of India ("LIWI," "Company," "we," "us," or "our").</p>
+          
+          <p>By accessing, downloading, installing, or using the LIWI application, website, or any related services (collectively, the "Service"), you acknowledge that you have read, understood, and agree to be bound by these Terms and our Privacy Policy, which is incorporated herein by reference.</p>
+          
+          <h3>2. Eligibility and Account Registration</h3>
+          <h4>2.1 Age Requirements</h4>
+          <ul>
+            <li>You must be at least 13 years of age to use our Service</li>
+            <li>Users between 13-18 years require verifiable parental or guardian consent</li>
+            <li>We comply with the Digital Personal Data Protection Act, 2023 (DPDP Act) for children's data protection</li>
+          </ul>
+          
+          <h4>2.2 Account Creation</h4>
+          <ul>
+            <li>You must provide accurate, current, and complete information during registration</li>
+            <li>You are responsible for maintaining the confidentiality of your account credentials</li>
+            <li>You agree to notify us immediately of any unauthorized use of your account</li>
+            <li>One person may not maintain multiple accounts</li>
+          </ul>
+          
+          <h3>3. Service Description</h3>
+          <h4>3.1 LIWI Service Features</h4>
+          <p>LIWI provides:</p>
+          <ul>
+            <li>AI-powered English conversation practice</li>
+            <li>Real-time pronunciation and grammar feedback</li>
+            <li>Personalized learning plans and progress tracking</li>
+            <li>Interactive voice-based learning exercises</li>
+            <li>Speech recognition and analysis</li>
+            <li>Fluency assessment and improvement recommendations</li>
+          </ul>
+          
+          <h3>4. Subscription and Payment Terms</h3>
+          <h4>4.1 Subscription Plans</h4>
+          <p>LIWI offers both free and premium subscription plans:</p>
+          <ul>
+            <li><strong>Free Plan:</strong> Limited features and usage</li>
+            <li><strong>Premium Plans:</strong> Enhanced features, unlimited practice sessions, advanced analytics</li>
+          </ul>
+          
+          <h4>4.2 Free Trials</h4>
+          <ul>
+            <li>New users may be eligible for free trial periods</li>
+            <li>Free trials automatically convert to paid subscriptions unless cancelled</li>
+            <li>Trial terms and conditions may vary and will be disclosed at sign-up</li>
+          </ul>
+          
+          <h3>5. Privacy and Data Protection</h3>
+          <p>We collect and process personal data in accordance with our Privacy Policy and comply with the Digital Personal Data Protection Act, 2023 (DPDP Act). Voice data is processed using secure, encrypted systems, and we implement appropriate technical and organizational measures to protect your data.</p>
+          
+          <h3>6. Disclaimers and Limitations</h3>
+          <h4>6.1 Service Disclaimers</h4>
+          <ul>
+            <li>LIWI is an educational tool and does not guarantee English proficiency</li>
+            <li>AI feedback may not always be 100% accurate</li>
+            <li>Results may vary based on individual effort and aptitude</li>
+            <li>The Service is provided "as is" without warranties</li>
+          </ul>
+          
+          <h3>7. Contact Information</h3>
+          <p>For questions, concerns, or technical support:</p>
+          <ul>
+            <li><strong>Email:</strong> info@myliwi.com</li>
+            <li><strong>Address:</strong> LIWI Learning Solutions Pvt.Ltd, Malappuram, Kerala 679325</li>
+            <li><strong>Website:</strong> www.myliwi.com</li>
+          </ul>
+          
+          <p class="last-updated"><strong>Last Updated:</strong> July 07, 2025 | <strong>Version:</strong> 1.0</p>
+          <p>For the complete Terms of Service, please contact us at info@myliwi.com</p>
+        </div>
       </div>
     </div>
   </div>
 
+  <!-- Privacy Policy Modal -->
+  <div class="modal" id="privacy-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Privacy Policy</h2>
+        <button class="modal-close" id="privacy-close">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="legal-document">
+          <p class="effective-date"><strong>Effective Date:</strong> July 07, 2025 | <strong>Last Updated:</strong> July 07, 2025</p>
+          
+          <h3>1. Introduction</h3>
+          <p>Liwi Learning Solutions Pvt.Ltd ("LIWI," "Company," "we," "us," or "our") is committed to protecting your privacy and personal data. This Privacy Policy explains how we collect, use, process, store, and protect your personal information when you use the LIWI AI-powered English tutoring application and related services.</p>
+          
+          <p>This Privacy Policy is designed to comply with the Digital Personal Data Protection Act, 2023 (DPDP Act), Information Technology Act, 2000, and other applicable Indian data protection laws.</p>
+          
+          <h3>2. Information We Collect</h3>
+          <h4>2.1 Personal Data Categories</h4>
+          <p>We collect the following types of personal data:</p>
+          
+          <h5>2.1.1 Account and Profile Information</h5>
+          <ul>
+            <li>Full name</li>
+            <li>Email address</li>
+            <li>Phone number (optional)</li>
+            <li>Profile picture (optional)</li>
+            <li>Language preferences</li>
+            <li>Learning goals and objectives</li>
+          </ul>
+          
+          <h5>2.1.2 Voice and Audio Data</h5>
+          <ul>
+            <li>Voice recordings during speaking exercises</li>
+            <li>Speech patterns and pronunciation data</li>
+            <li>Audio responses to learning prompts</li>
+            <li>Conversation practice recordings</li>
+          </ul>
+          
+          <h5>2.1.3 Learning and Performance Data</h5>
+          <ul>
+            <li>Learning progress and achievements</li>
+            <li>Test scores and assessment results</li>
+            <li>Time spent on different exercises</li>
+            <li>Difficulty levels and preferences</li>
+          </ul>
+          
+          <h3>3. How We Use Your Information</h3>
+          <h4>3.1 Service Provision</h4>
+          <ul>
+            <li>Providing AI-powered English tutoring services</li>
+            <li>Personalizing learning experiences and recommendations</li>
+            <li>Tracking learning progress and generating performance reports</li>
+            <li>Processing voice data for pronunciation analysis and feedback</li>
+          </ul>
+          
+          <h3>4. Data Security</h3>
+          <p>We implement industry-standard security measures including:</p>
+          <ul>
+            <li>Encryption of data in transit and at rest</li>
+            <li>Secure API endpoints and authentication</li>
+            <li>Regular security audits and vulnerability assessments</li>
+            <li>Multi-factor authentication for admin access</li>
+          </ul>
+          
+          <h3>5. Your Rights Under DPDP Act</h3>
+          <p>As a data principal under the DPDP Act, you have the following rights:</p>
+          <ul>
+            <li><strong>Right to Information:</strong> Know what personal data we collect about you</li>
+            <li><strong>Right of Access:</strong> Request a copy of your personal data</li>
+            <li><strong>Right to Correction:</strong> Correct inaccurate or incomplete personal data</li>
+            <li><strong>Right to Erasure:</strong> Request deletion of your personal data</li>
+            <li><strong>Right to Data Portability:</strong> Export your learning data and progress</li>
+          </ul>
+          
+          <h3>6. Data Retention</h3>
+          <ul>
+            <li><strong>Account Data:</strong> Until account deletion + 30 days for backup purposes</li>
+            <li><strong>Voice Recordings:</strong> 30 days unless saved by user for progress tracking</li>
+            <li><strong>Learning Analytics:</strong> 2 years for service improvement</li>
+          </ul>
+          
+          <h3>7. Contact Information</h3>
+          <p>For privacy-related inquiries:</p>
+          <ul>
+            <li><strong>Email:</strong> info@myliwi.com</li>
+            <li><strong>Address:</strong> Liwi Learning Solutions Pvt.Ltd, Malappuram, Kerala 679325, India</li>
+          </ul>
+          
+          <p class="last-updated"><strong>Document Version:</strong> 1.0 | <strong>Last Updated:</strong> July 07, 2025</p>
+          <p>For the complete Privacy Policy, please contact us at info@myliwi.com</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
   <script src="script.js"></script>
 </body>
 </html>
