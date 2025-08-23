@@ -28,14 +28,8 @@ document.addEventListener('DOMContentLoaded', function() {
   const badges = document.querySelectorAll('.badge');
   const allImages = document.querySelectorAll('img');
   
-  // FAQ and Modal elements
+  // FAQ and other elements (removed modal elements)
   const faqItems = document.querySelectorAll('.faq-item');
-  const termsLink = document.getElementById('terms-link');
-  const privacyLink = document.getElementById('privacy-link');
-  const termsModal = document.getElementById('terms-modal');
-  const privacyModal = document.getElementById('privacy-modal');
-  const termsClose = document.getElementById('terms-close');
-  const privacyClose = document.getElementById('privacy-close');
 
   // Enhanced elements for professional features
   const hoverLiftElements = document.querySelectorAll('.hover-lift');
@@ -674,113 +668,11 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   // ====================================
-  // ENHANCED MODAL FUNCTIONALITY
+  // ENHANCED MODAL FUNCTIONALITY - REMOVED (Direct page navigation)
   // ====================================
-  function initializeModals() {
-    // Enhanced modal opening and closing with better UX
-    function openModal(modal) {
-      if (modal) {
-        modal.classList.add('active');
-        document.body.style.overflow = 'hidden';
-        modal.style.backgroundColor = 'rgba(0, 0, 0, 0.6)';
-        
-        // Enhanced modal content styling
-        const modalContent = modal.querySelector('.modal-content');
-        if (modalContent) {
-          modalContent.style.backgroundColor = '#ffffff';
-          modalContent.style.transform = 'scale(0.9)';
-          modalContent.style.opacity = '0';
-          
-          // Smooth entrance animation
-          setTimeout(() => {
-            modalContent.style.transform = 'scale(1)';
-            modalContent.style.opacity = '1';
-          }, 10);
-        }
-        
-        // Focus management
-        const closeButton = modal.querySelector('.modal-close');
-        if (closeButton) {
-          setTimeout(() => closeButton.focus(), 100);
-        }
-      }
-    }
-
-    function closeModal(modal) {
-      if (modal) {
-        const modalContent = modal.querySelector('.modal-content');
-        if (modalContent) {
-          modalContent.style.transform = 'scale(0.9)';
-          modalContent.style.opacity = '0';
-        }
-        
-        setTimeout(() => {
-          modal.classList.remove('active');
-          document.body.style.overflow = '';
-        }, 200);
-      }
-    }
-
-    // Terms of Service Modal
-    if (termsLink && termsModal) {
-      termsLink.addEventListener('click', function(e) {
-        e.preventDefault();
-        openModal(termsModal);
-      });
-    }
-
-    // Privacy Policy Modal
-    if (privacyLink && privacyModal) {
-      privacyLink.addEventListener('click', function(e) {
-        e.preventDefault();
-        openModal(privacyModal);
-      });
-    }
-
-    // Close button functionality with enhanced styling
-    [termsClose, privacyClose].forEach((closeBtn, index) => {
-      if (closeBtn) {
-        const modal = index === 0 ? termsModal : privacyModal;
-        closeBtn.addEventListener('click', function() {
-          closeModal(modal);
-        });
-        
-        // Enhanced hover effects
-        closeBtn.addEventListener('mouseenter', function() {
-          this.style.transform = 'scale(1.1)';
-          this.style.backgroundColor = '#f3f4f6';
-        });
-        
-        closeBtn.addEventListener('mouseleave', function() {
-          this.style.transform = 'scale(1)';
-          this.style.backgroundColor = 'transparent';
-        });
-      }
-    });
-
-    // Enhanced outside click detection
-    [termsModal, privacyModal].forEach(modal => {
-      if (modal) {
-        modal.addEventListener('click', function(e) {
-          if (e.target === modal) {
-            closeModal(modal);
-          }
-        });
-      }
-    });
-
-    // Enhanced keyboard handling
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') {
-        if (termsModal && termsModal.classList.contains('active')) {
-          closeModal(termsModal);
-        }
-        if (privacyModal && privacyModal.classList.contains('active')) {
-          closeModal(privacyModal);
-        }
-      }
-    });
-  }
+  // Modal functionality removed as we now navigate directly to separate pages
+  // Terms of Service: termsofservice/
+  // Privacy Policy: privacypolicy/
 
   // ====================================
   // ENHANCED BADGE EFFECTS
@@ -1146,7 +1038,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeFlowAnimations();
     initializeBadgeEffects();
     initializeFAQ();
-    initializeModals();
+    // Modal functionality removed - direct page navigation
     initializeImageErrorHandling();
     initializePerformanceMonitoring();
     initializeAccessibilityFeatures();
