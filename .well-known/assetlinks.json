@@ -1,0 +1,10 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.myliwi.ai",
+    "sha256_cert_fingerprints": [
+      "FA:91:7D:30:0F:AE:83:4D:E4:EB:27:5B:CE:49:49:D6:0A:12:45:4A:80:B3:37:69:04:11:47:6B:FE:A3:9B:BC"
+    ]
+  }
+}]
