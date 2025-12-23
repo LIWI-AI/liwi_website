@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Support - Liwi AI English Tutor</title>
+  <meta name="description" content="Get help with Liwi AI English Tutor. Find answers to common questions, contact support, and learn how to use our app effectively.">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="16x16" href="../assets/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="../assets/images/favicon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="../assets/images/favicon.png">
+  <link rel="shortcut icon" href="../assets/images/favicon.png">
+  
+  <!-- SEO Meta Tags -->
+  <meta name="keywords" content="Liwi support, AI English tutor help, customer service, FAQ, contact support">
+  <meta name="author" content="Liwi">
+  <meta property="og:title" content="Support - Liwi AI English Tutor">
+  <meta property="og:description" content="Get help with Liwi AI English Tutor">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://myliwi.com/support/">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  
+  <style>
+    /* Reset & Variables */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      /* Liwi Brand Colors */
+      --liwi-cyan: #7ed0e6;
+      --liwi-pink: #daacda;
+      --liwi-purple: #7064ac;
+      
+      /* Brand Gradients */
+      --gradient-primary: linear-gradient(135deg, var(--liwi-cyan), var(--liwi-pink), var(--liwi-purple));
+      
+      /* Neutral Colors */
+      --white: #ffffff;
+      --pure-white: #ffffff;
+      --gray-25: #fcfcfd;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-300: #d1d5db;
+      --gray-400: #9ca3af;
+      --gray-500: #6b7280;
+      --gray-600: #4b5563;
+      --gray-700: #374151;
+      --gray-800: #1f2937;
+      --gray-900: #111827;
+      
+      /* Typography */
+      --font-display: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      --font-text: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      
+      /* Spacing */
+      --space-2: 0.5rem;
+      --space-3: 0.75rem;
+      --space-4: 1rem;
+      --space-5: 1.25rem;
+      --space-6: 1.5rem;
+      --space-8: 2rem;
+      --space-10: 2.5rem;
+      --space-12: 3rem;
+      --space-16: 4rem;
+      --space-20: 5rem;
+      --space-24: 6rem;
+      --space-32: 8rem;
+      
+      /* Border Radius */
+      --radius-sm: 0.375rem;
+      --radius-md: 0.5rem;
+      --radius-lg: 0.75rem;
+      --radius-xl: 1rem;
+      --radius-2xl: 1.5rem;
+      --radius-full: 50%;
+      
+      /* Shadows */
+      --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.08), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+      --shadow-md: 0 4px 8px -2px rgba(0, 0, 0, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 20px -4px rgba(0, 0, 0, 0.08), 0 4px 8px -2px rgba(0, 0, 0, 0.06);
+      --shadow-xl: 0 20px 30px -8px rgba(0, 0, 0, 0.10), 0 8px 16px -4px rgba(0, 0, 0, 0.06);
+      --shadow-brand: 0 10px 25px rgba(126, 208, 230, 0.15);
+      
+      /* Transitions */
+      --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Base Styles */
+    html {
+      scroll-behavior: smooth;
+      background: var(--pure-white);
+    }
+
+    body {
+      font-family: var(--font-text);
+      font-size: 1rem;
+      line-height: 1.6;
+      color: var(--gray-900);
+      background: var(--pure-white);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 var(--space-6);
+    }
+
+    .gradient-text {
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    /* Header */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: var(--pure-white);
+      padding: var(--space-8) 0;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .header-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      text-decoration: none;
+    }
+
+    .logo-image {
+      height: 100px;
+      width: auto;
+      transition: all var(--transition-normal);
+    }
+
+    .logo-text {
+      font-family: var(--font-display);
+      font-size: 3rem;
+      font-weight: 800;
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: -0.02em;
+    }
+
+    .back-button {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-3) var(--space-5);
+      background: var(--pure-white);
+      color: var(--liwi-purple);
+      border: 2px solid rgba(126, 208, 230, 0.3);
+      border-radius: var(--radius-full);
+      font-weight: 600;
+      text-decoration: none;
+      transition: all var(--transition-normal);
+      font-size: 0.9375rem;
+    }
+
+    .back-button:hover {
+      background: var(--gray-25);
+      border-color: rgba(126, 208, 230, 0.5);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-brand);
+    }
+
+    .back-button i {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* Main Content */
+    .main-content {
+      padding: calc(var(--space-32) + 100px) 0 var(--space-32);
+      min-height: 100vh;
+    }
+
+    /* Page Header */
+    .page-header {
+      text-align: center;
+      margin-bottom: var(--space-24);
+    }
+
+    .page-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.25rem, 5vw, 3.5rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--gray-900);
+      margin-bottom: var(--space-6);
+    }
+
+    .page-subtitle {
+      font-size: 1.125rem;
+      color: var(--gray-600);
+      max-width: 700px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    /* Support Sections */
+    .support-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: var(--space-12);
+      margin-bottom: var(--space-24);
+    }
+
+    .support-card {
+      background: var(--pure-white);
+      padding: var(--space-12);
+      border-radius: var(--radius-2xl);
+      border: 1px solid var(--gray-100);
+      box-shadow: var(--shadow-sm);
+      transition: all var(--transition-normal);
+    }
+
+    .support-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-xl);
+      border-color: rgba(126, 208, 230, 0.3);
+    }
+
+    .support-icon {
+      width: 70px;
+      height: 70px;
+      background: var(--gradient-primary);
+      border-radius: var(--radius-xl);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: var(--space-6);
+      color: var(--white);
+      box-shadow: var(--shadow-brand);
+    }
+
+    .support-icon i {
+      width: 28px;
+      height: 28px;
+    }
+
+    .support-card h2 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--gray-900);
+      margin-bottom: var(--space-4);
+    }
+
+    .support-card p {
+      color: var(--gray-600);
+      line-height: 1.7;
+      margin-bottom: var(--space-6);
+    }
+
+    .contact-info {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      color: var(--gray-700);
+      padding: var(--space-3);
+      border-radius: var(--radius-md);
+      transition: all var(--transition-normal);
+    }
+
+    .contact-item:hover {
+      background: var(--gray-25);
+    }
+
+    .contact-item i {
+      width: 20px;
+      height: 20px;
+      color: var(--liwi-cyan);
+      flex-shrink: 0;
+    }
+
+    .contact-item a {
+      color: var(--liwi-purple);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .contact-item a:hover {
+      text-decoration: underline;
+    }
+
+    /* FAQ Section */
+    .faq-section {
+      max-width: 900px;
+      margin: var(--space-24) auto;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: var(--space-16);
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.875rem, 4vw, 2.5rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--gray-900);
+      margin-bottom: var(--space-4);
+    }
+
+    .faq-container {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-6);
+    }
+
+    .faq-item {
+      background: var(--pure-white);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--gray-100);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      transition: all var(--transition-normal);
+    }
+
+    .faq-item:hover {
+      box-shadow: var(--shadow-lg);
+      border-color: rgba(126, 208, 230, 0.3);
+    }
+
+    .faq-question {
+      padding: var(--space-8);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--pure-white);
+      transition: all var(--transition-normal);
+    }
+
+    .faq-question:hover {
+      background: rgba(126, 208, 230, 0.05);
+    }
+
+    .faq-question h3 {
+      font-family: var(--font-display);
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--gray-900);
+      margin: 0;
+      padding-right: var(--space-4);
+    }
+
+    .faq-question i {
+      width: 24px;
+      height: 24px;
+      color: var(--liwi-purple);
+      transition: transform var(--transition-normal);
+      flex-shrink: 0;
+    }
+
+    .faq-item.active .faq-question i {
+      transform: rotate(180deg);
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      background: var(--pure-white);
+    }
+
+    .faq-item.active .faq-answer {
+      max-height: 500px;
+    }
+
+    .faq-answer-content {
+      padding: var(--space-4) var(--space-8) var(--space-8);
+    }
+
+    .faq-answer-content p {
+      color: var(--gray-600);
+      line-height: 1.7;
+      margin: 0;
+    }
+
+    /* Additional Resources */
+    .resources-section {
+      background: var(--gray-25);
+      padding: var(--space-20) 0;
+      margin-top: var(--space-32);
+    }
+
+    .resources-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--space-10);
+      margin-top: var(--space-12);
+    }
+
+    .resource-card {
+      background: var(--pure-white);
+      padding: var(--space-10);
+      border-radius: var(--radius-2xl);
+      border: 1px solid var(--gray-100);
+      box-shadow: var(--shadow-sm);
+      transition: all var(--transition-normal);
+      text-align: center;
+    }
+
+    .resource-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .resource-icon {
+      width: 60px;
+      height: 60px;
+      background: var(--gradient-primary);
+      border-radius: var(--radius-xl);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto var(--space-6);
+      color: var(--white);
+    }
+
+    .resource-icon i {
+      width: 24px;
+      height: 24px;
+    }
+
+    .resource-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--gray-900);
+      margin-bottom: var(--space-3);
+    }
+
+    .resource-card p {
+      color: var(--gray-600);
+      line-height: 1.6;
+      margin-bottom: var(--space-6);
+    }
+
+    .resource-link {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      color: var(--liwi-purple);
+      text-decoration: none;
+      font-weight: 600;
+      transition: all var(--transition-normal);
+    }
+
+    .resource-link:hover {
+      color: var(--liwi-cyan);
+      gap: var(--space-3);
+    }
+
+    .resource-link i {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* Footer */
+    .footer {
+      background: var(--gray-900);
+      color: var(--white);
+      padding: var(--space-20) 0 var(--space-8);
+    }
+
+    .footer-content {
+      text-align: center;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: var(--space-8);
+      margin-bottom: var(--space-8);
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: var(--gray-400);
+      text-decoration: none;
+      transition: color var(--transition-normal);
+    }
+
+    .footer-links a:hover {
+      color: var(--white);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid var(--gray-700);
+      padding-top: var(--space-8);
+      text-align: center;
+    }
+
+    .footer-bottom p {
+      color: var(--gray-400);
+      margin: 0;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .header-container {
+        flex-direction: column;
+        gap: var(--space-4);
+      }
+
+      .logo-image {
+        height: 70px;
+      }
+
+      .logo-text {
+        font-size: 2rem;
+      }
+
+      .main-content {
+        padding: calc(var(--space-24) + 140px) 0 var(--space-24);
+      }
+
+      .support-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-8);
+      }
+
+      .resources-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-8);
+      }
+
+      .footer-links {
+        flex-direction: column;
+        gap: var(--space-4);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 0 var(--space-4);
+      }
+
+      .logo-image {
+        height: 60px;
+      }
+
+      .logo-text {
+        font-size: 1.75rem;
+      }
+
+      .page-title {
+        font-size: 2rem;
+      }
+
+      .support-card,
+      .resource-card {
+        padding: var(--space-8);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <div class="header-container">
+        <a href="../" class="logo">
+          <img src="../assets/images/liwi_logo.png" alt="Liwi Logo" class="logo-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+          <span class="logo-text" style="display: none;">liwi</span>
+        </a>
+        <a href="../" class="back-button">
+          <i data-lucide="arrow-left"></i>
+          <span>Back to Home</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="container">
+      <!-- Page Header -->
+      <div class="page-header">
+        <h1 class="page-title">
+          How can we <span class="gradient-text">help you?</span>
+        </h1>
+        <p class="page-subtitle">
+          We're here to support your English learning journey. Find answers to common questions or reach out to our support team.
+        </p>
+      </div>
+
+      <!-- Support Options -->
+      <div class="support-grid">
+        <!-- Email Support -->
+        <div class="support-card">
+          <div class="support-icon">
+            <i data-lucide="mail"></i>
+          </div>
+          <h2>Email Support</h2>
+          <p>Get help via email. We typically respond within 24 hours on business days.</p>
+          <div class="contact-info">
+            <div class="contact-item">
+              <i data-lucide="mail"></i>
+              <a href="mailto:support@liwilearning.com">support@liwilearning.com</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- In-App Support -->
+        <div class="support-card">
+          <div class="support-icon">
+            <i data-lucide="message-circle"></i>
+          </div>
+          <h2>In-App Chat</h2>
+          <p>The fastest way to get help. Use the chat feature inside the Liwi app for instant assistance.</p>
+          <div class="contact-info">
+            <div class="contact-item">
+              <i data-lucide="smartphone"></i>
+              <span>Open Liwi App → Settings → Help & Support</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Business Inquiries -->
+        <div class="support-card">
+          <div class="support-icon">
+            <i data-lucide="briefcase"></i>
+          </div>
+          <h2>Business & Partnership</h2>
+          <p>For business inquiries, partnerships, or institutional licenses, reach out to our team.</p>
+          <div class="contact-info">
+            <div class="contact-item">
+              <i data-lucide="mail"></i>
+              <a href="mailto:business@liwilearning.com">business@liwilearning.com</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FAQ Section -->
+      <section class="faq-section">
+        <div class="section-header">
+          <h2 class="section-title">
+            Frequently Asked <span class="gradient-text">Questions</span>
+          </h2>
+        </div>
+
+        <div class="faq-container">
+          <!-- Getting Started -->
+          <div class="faq-item">
+            <div class="faq-question">
+              <h3>How do I get started with Liwi?</h3>
+              <i data-lucide="chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              <div class="faq-answer-content">
+                <p>Download the Liwi app from the App Store or Google Play Store. Create an account, take a quick 5-minute assessment to determine your English level, and start learning immediately. You'll get a 3-day free trial to experience all premium features.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Free Trial -->
+          <div class="faq-item">
+            <div class="faq-question">
+              <h3>How does the free trial work?</h3>
+              <i data-lucide="chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              <div class="faq-answer-content">
+                <p>You get 3 days of full premium access completely free. No credit card required during signup. Try all features including unlimited AI tutor conversations and advanced lessons. Cancel anytime within 3 days for zero charges. After the trial, choose a subscription plan that works for you.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cancel Trial -->
+          <div class="faq-item">
+            <div class="faq-question">
+              <h3>How do I cancel my subscription or free trial?</h3>
+              <i data-lucide="chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              <div class="faq-answer-content">
+                <p>You can cancel anytime through: (1) App: Go to Profile → Settings → Manage Subscription → Cancel, (2) Your phone's subscription settings (iOS Settings or Google Play), or (3) Email us at support@liwilearning.com with "Cancel Subscription" in the subject line. No charges if you cancel within the 3-day trial period.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Account Issues -->
+          <div class="faq-item">
+            <div class="faq-question">
+              <h3>I'm having trouble logging in. What should I do?</h3>
+              <i data-lucide="chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              <div class="faq-answer-content">
+                <p>First, try resetting your password using the "Forgot Password" link on the login screen. Make sure you're using the correct email or phone number associated with your account. If you're still having issues, clear your app cache or reinstall the app. Contact support@liwilearning.com if problems persist.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Payment Issues -->
+          <div class="faq-item">
+            <div class="faq-question">
+              <h3>My payment failed or I was charged incorrectly. What do I do?</h3>
+              <i data-lucide="chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              <div class="faq-answer-content">
+                <p>For payment issues, first check your bank statement to confirm the charge. If you were charged incorrectly, email us at support@liwilearning.com with your order details and we'll process a refund within 5-7 business days. For failed payments, verify your payment method is valid and has sufficient funds, or try a different payment method.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Technical Issues -->
+          <div class="faq-item">
+            <div class="faq-question">
+              <h3>The app is crashing or not working properly. How can I fix this?</h3>
+              <i data-lucide="chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              <div class="faq-answer-content">
+                <p>Try these steps: (1) Close and restart the app, (2) Check for app updates in your app store, (3) Restart your device, (4) Clear app cache (in app settings), (5) Reinstall the app. If issues continue, email support@liwilearning.com with details about your device model, OS version, and the problem you're experiencing.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Learning Progress -->
+          <div class="faq-item">
+            <div class="faq-question">
+              <h3>How long does it take to see improvement?</h3>
+              <i data-lucide="chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              <div class="faq-answer-content">
+                <p>Most users report feeling 40-60% more confident in 30 days of consistent practice. Full conversational fluency typically takes 3-6 months with daily 10-20 minute practice sessions. Your progress depends on your starting level, practice frequency, and engagement with the AI tutor. Track your improvement in the Progress section of the app.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Data Privacy -->
+          <div class="faq-item">
+            <div class="faq-question">
+              <h3>Is my data safe and private?</h3>
+              <i data-lucide="chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              <div class="faq-answer-content">
+                <p>Yes! We take data privacy seriously. Your conversations and personal information are encrypted and securely stored. We never sell your data to third parties. Voice recordings are processed for pronunciation feedback only and can be deleted anytime from your settings. Read our full Privacy Policy for detailed information.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Multiple Devices -->
+          <div class="faq-item">
+            <div class="faq-question">
+              <h3>Can I use Liwi on multiple devices?</h3>
+              <i data-lucide="chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              <div class="faq-answer-content">
+                <p>Yes! Your Liwi account works across all your devices. Simply log in with the same credentials on your phone, tablet, or any other device. Your progress, lessons, and subscription automatically sync across all devices. Note: One subscription covers one user account, not multiple family members.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Refund Policy -->
+          <div class="faq-item">
+            <div class="faq-question">
+              <h3>What is your refund policy?</h3>
+              <i data-lucide="chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              <div class="faq-answer-content">
+                <p>We offer a full refund within 7 days of purchase if you're not satisfied. After 7 days, refunds are evaluated on a case-by-case basis for valid technical issues or extenuating circumstances. To request a refund, email support@liwilearning.com with your order number and reason. Refunds are processed within 5-7 business days.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Additional Resources -->
+    <section class="resources-section">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">
+            Additional <span class="gradient-text">Resources</span>
+          </h2>
+        </div>
+
+        <div class="resources-grid">
+          <div class="resource-card">
+            <div class="resource-icon">
+              <i data-lucide="book-open"></i>
+            </div>
+            <h3>User Guide</h3>
+            <p>Learn how to make the most of Liwi's features with our comprehensive user guide.</p>
+            <a href="mailto:support@liwilearning.com?subject=Request User Guide" class="resource-link">
+              <span>Request Guide</span>
+              <i data-lucide="arrow-right"></i>
+            </a>
+          </div>
+
+          <div class="resource-card">
+            <div class="resource-icon">
+              <i data-lucide="shield"></i>
+            </div>
+            <h3>Privacy Policy</h3>
+            <p>Understand how we protect and handle your data.</p>
+            <a href="../privacypolicy/" class="resource-link">
+              <span>Read Policy</span>
+              <i data-lucide="arrow-right"></i>
+            </a>
+          </div>
+
+          <div class="resource-card">
+            <div class="resource-icon">
+              <i data-lucide="file-text"></i>
+            </div>
+            <h3>Terms of Service</h3>
+            <p>Review our terms and conditions for using Liwi.</p>
+            <a href="../termsofservice/" class="resource-link">
+              <span>Read Terms</span>
+              <i data-lucide="arrow-right"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-links">
+          <a href="../">Home</a>
+          <a href="../termsofservice/">Terms of Service</a>
+          <a href="../privacypolicy/">Privacy Policy</a>
+          <a href="mailto:support@liwilearning.com">Contact</a>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; 2025 Liwi. All rights reserved.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Initialize Lucide Icons -->
+  <script>
+    if (typeof lucide !== 'undefined') {
+      lucide.createIcons();
+    }
+
+    // FAQ Accordion Functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const faqItems = document.querySelectorAll('.faq-item');
+
+      faqItems.forEach(item => {
+        const question = item.querySelector('.faq-question');
+        const answer = item.querySelector('.faq-answer');
+        const content = item.querySelector('.faq-answer-content');
+
+        question.addEventListener('click', function() {
+          const isActive = item.classList.contains('active');
+
+          // Close all other items
+          faqItems.forEach(otherItem => {
+            if (otherItem !== item && otherItem.classList.contains('active')) {
+              otherItem.classList.remove('active');
+              const otherAnswer = otherItem.querySelector('.faq-answer');
+              if (otherAnswer) {
+                otherAnswer.style.maxHeight = '0';
+              }
+            }
+          });
+
+          // Toggle current item
+          if (isActive) {
+            item.classList.remove('active');
+            answer.style.maxHeight = '0';
+          } else {
+            item.classList.add('active');
+            const contentHeight = content.scrollHeight;
+            answer.style.maxHeight = (contentHeight + 32) + 'px';
+
+            setTimeout(() => {
+              if (item.classList.contains('active')) {
+                answer.style.maxHeight = '500px';
+              }
+            }, 300);
+          }
+        });
+
+        // Keyboard accessibility
+        question.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            this.click();
+          }
+        });
+      });
+
+      // Smooth scroll to FAQ if hash is present
+      if (window.location.hash === '#faq') {
+        setTimeout(() => {
+          const faqSection = document.querySelector('.faq-section');
+          if (faqSection) {
+            faqSection.scrollIntoView({ behavior: 'smooth' });
+          }
+        }, 100);
+      }
+    });
+  </script>
+</body>
+</html>
